@@ -1,0 +1,41 @@
+services:
+  db-products:
+    container_name: db-products
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: products
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-products-data:/var/lib/postgresql/data
+    restart: unless-stopped
+  db-inventory:
+    container_name: db-inventory
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: inventory
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5431:5431"
+    volumes:
+      - db-inventory-data:/var/lib/postgresql/data
+    restart: unless-stopped
+  db-orders:
+    container_name: db-orders
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    ports:
+      - "5433:5433"
+    volumes:
+      - db-orders-data:/var/lib/postgresql/data
+    restart: unless-stopped
+volumes:
+  db-products-data:
+  db-inventory-data:
+  db-orders-data:
