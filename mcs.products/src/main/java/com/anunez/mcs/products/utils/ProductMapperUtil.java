@@ -9,11 +9,11 @@ public class ProductMapperUtil {
     
     public static Product mapToProduct(ProductReq productReq) {
         return Product.builder()
-                .code(productReq.code())
-                .sku(productReq.sku())
-                .name(productReq.name())
-                .description(productReq.description())
-                .price(productReq.price())
+                    .code(productReq.code())
+                    .sku(productReq.sku())
+                    .name(productReq.name())
+                    .description(productReq.description())
+                    .price(productReq.price())
                 .build();
     }
 

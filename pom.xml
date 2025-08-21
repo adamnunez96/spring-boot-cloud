@@ -17,7 +17,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>mcs.inventory</module>
-    <module>mcs.order</module>
+    <module>mcs.orders</module>
     <module>mcs.products</module>
   </modules>
 

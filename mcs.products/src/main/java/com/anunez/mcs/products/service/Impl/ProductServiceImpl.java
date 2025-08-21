@@ -11,6 +11,7 @@ import com.anunez.mcs.products.dto.ProductReq;
 import com.anunez.mcs.products.model.Product;
 import com.anunez.mcs.products.repository.ProductRepository;
 import com.anunez.mcs.products.service.ProductService;
+import com.anunez.mcs.products.utils.ProductMapperUtil;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -25,32 +26,43 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(ProductReq productReq) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createProduct'");
+        return productRepository.save(ProductMapperUtil.mapToProduct(productReq));
     }
 
     @Override
     public Optional<Product> getProductById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProductById'");
+        LOG.info("Fetching product with ID: {}", id);
+        return productRepository.findById(id)
+                .or(() -> {
+                    LOG.warn("Product with ID {} not found", id);
+                    return Optional.empty();
+                });
     }
 
     @Override
     public List<Product> getAllProducts() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllProducts'");
+        return productRepository.findAll();
     }
 
     @Override
     public Product updateProduct(Long id, ProductReq productReq) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+        LOG.info("Updating product with ID: {}", id);
+        return productRepository.findById(id)
+                .map(product -> {
+                    Product updatedProduct = ProductMapperUtil.mapToProduct(productReq);
+                    updatedProduct.setId(product.getId());
+                    return productRepository.save(updatedProduct);
+                })
+                .orElseGet(() -> {
+                    LOG.warn("Product with ID {} not found", id);
+                    return null;
+                });
     }
 
     @Override
     public void deleteProduct(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteProduct'");
+        LOG.info("Deleting product with ID: {}", id);
+        productRepository.deleteById(id);
     }
     
 }
