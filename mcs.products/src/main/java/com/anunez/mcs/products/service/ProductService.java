@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import com.anunez.mcs.products.dto.ProductReq;
-import com.anunez.mcs.products.model.Product;
+import com.anunez.mcs.products.dto.ProductRes;
 
 public interface ProductService {
-    Product createProduct(ProductReq productReq);
-    Optional<Product> getProductById(Long id);
-    List<Product> getAllProducts();
-    Product updateProduct(Long id, ProductReq productReq);
+    ProductRes createProduct(ProductReq productReq);
+    Optional<ProductRes> getProductById(Long id);
+    List<ProductRes> getAllProducts();
+    ProductRes updateProduct(Long id, ProductReq productReq);
     void deleteProduct(Long id);
 }

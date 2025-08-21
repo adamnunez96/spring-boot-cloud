@@ -1,22 +1,22 @@
-package com.anunez.mcs.products.service.Impl;
+package com.anunez.mcs.products.service.impl;
 
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.anunez.mcs.products.dto.ProductReq;
+import com.anunez.mcs.products.dto.ProductRes;
 import com.anunez.mcs.products.model.Product;
 import com.anunez.mcs.products.repository.ProductRepository;
 import com.anunez.mcs.products.service.ProductService;
 import com.anunez.mcs.products.utils.ProductMapperUtil;
 
-@Service
-public class ProductServiceImpl implements ProductService {
+import lombok.extern.slf4j.Slf4j;
 
-    private static final Logger LOG = LoggerFactory.getLogger(ProductServiceImpl.class);
+@Service
+@Slf4j
+public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
 
@@ -25,43 +25,52 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product createProduct(ProductReq productReq) {
-        return productRepository.save(ProductMapperUtil.mapToProduct(productReq));
+    public ProductRes createProduct(ProductReq productReq) {
+        log.info("Creating new product with code: {}", productReq.code());
+        Product saveProduct = productRepository.save(ProductMapperUtil.mapToProduct(productReq));
+        return ProductMapperUtil.mapToProductRes(saveProduct);
     }
 
     @Override
-    public Optional<Product> getProductById(Long id) {
-        LOG.info("Fetching product with ID: {}", id);
+    public Optional<ProductRes> getProductById(Long id) {
+        log.info("Fetching product with ID: {}", id);
         return productRepository.findById(id)
+                .map(ProductMapperUtil::mapToProductRes)
                 .or(() -> {
-                    LOG.warn("Product with ID {} not found", id);
+                    log.warn("Product with ID {} not found", id);
                     return Optional.empty();
                 });
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductRes> getAllProducts() {
+        return productRepository.findAll()
+                .stream()
+                .map(ProductMapperUtil::mapToProductRes)
+                .toList();
     }
 
     @Override
-    public Product updateProduct(Long id, ProductReq productReq) {
-        LOG.info("Updating product with ID: {}", id);
-        return productRepository.findById(id)
-                .map(product -> {
+    public ProductRes updateProduct(Long id, ProductReq productReq) {
+        log.info("Updating product with ID: {}", id);
+
+        Product productToUpdate = productRepository.findById(id)
+                .map(existingProduct -> {
                     Product updatedProduct = ProductMapperUtil.mapToProduct(productReq);
-                    updatedProduct.setId(product.getId());
+                    updatedProduct.setId(existingProduct.getId());
                     return productRepository.save(updatedProduct);
                 })
                 .orElseGet(() -> {
-                    LOG.warn("Product with ID {} not found", id);
-                    return null;
+                    log.warn("Product with ID {} not found", id);
+                    throw new RuntimeException("Product not found");
                 });
+
+        return ProductMapperUtil.mapToProductRes(productToUpdate);
     }
 
     @Override
     public void deleteProduct(Long id) {
-        LOG.info("Deleting product with ID: {}", id);
+        log.info("Deleting product with ID: {}", id);
         productRepository.deleteById(id);
     }
     

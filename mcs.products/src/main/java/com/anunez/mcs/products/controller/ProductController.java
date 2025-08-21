@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.anunez.mcs.products.dto.ProductReq;
-import com.anunez.mcs.products.model.Product;
+import com.anunez.mcs.products.dto.ProductRes;
 import com.anunez.mcs.products.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -23,7 +23,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/api/{version}/products")
+@RequestMapping("/api/${version}/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -34,25 +34,25 @@ public class ProductController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Product createProduct(@RequestBody @Valid ProductReq productReq) {
+    public ProductRes createProduct(@RequestBody @Valid ProductReq productReq) {
         return productService.createProduct(productReq);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable(required = true) Long id) {
+    public Optional<ProductRes> getProductById(@PathVariable(required = true) Long id) {
         return productService.getProductById(id);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductRes> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
-    public Product updateProduct(@PathVariable(required = true) Long id, @RequestBody ProductReq productReq) {
+    public ProductRes updateProduct(@PathVariable(required = true) Long id, @RequestBody ProductReq productReq) {
         return productService.updateProduct(id, productReq);
     }
 

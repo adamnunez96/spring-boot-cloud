@@ -1,7 +1,7 @@
 version: v1
 spring:
     datasource:
-        url: jdbc:postgresql://db-products:5432/products
+        url: jdbc:postgresql://localhost:5432/products
         username: postgres
         password: 123
         driver-class-name: org.postgresql.Driver
@@ -10,6 +10,3 @@ spring:
         hibernate:
             ddl-auto: update
         show-sql: true
-        properties:
-            hibernate:
-                dialect: org.hibernate.dialect.PostgreSQLDialect
